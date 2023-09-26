@@ -1,0 +1,12 @@
+{
+    "database": [
+        {
+            "email": "user1",
+            "password": "pass1"
+        },
+        {
+            "email": "user2",
+            "password": "pass2"
+        }
+    ]
+}

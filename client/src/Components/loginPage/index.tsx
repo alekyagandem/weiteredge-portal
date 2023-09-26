@@ -22,6 +22,7 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
+import users from '../../db.json'
 
 const MainDiv = styled.div({
   backgroundColor: 'black',
@@ -50,14 +51,15 @@ const FormContainer = styled(Container)({
 
 const database = [
   {
-    email: "user1",
-    password: "pass1"
+      "email": "user1",
+      "password": "pass1"
   },
   {
-    email: "user2",
-    password: "pass2"
+      "email": "user2",
+      "password": "pass2"
   }
-];
+]
+
 const LoginRoute = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -75,7 +77,7 @@ const LoginRoute = () => {
     const User = database.find((user) => user.email === form.email)
 
     if(User){
-      if(User.password === form.password){
+      if(User.password === form.password){  
         console.log('logged In successfully')
       }
     }
