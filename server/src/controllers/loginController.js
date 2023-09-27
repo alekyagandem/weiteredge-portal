@@ -4,7 +4,7 @@ exports.userSignUp = async (req, res) => {
   try {
     const {
       user_id,
-      role: { role_id, role_name },
+      role: { role_type, role_name },
       name,
       email,
       password,
@@ -17,7 +17,7 @@ exports.userSignUp = async (req, res) => {
 
     const newUser = {
       user_id,
-      role: { role_id, role_name },
+      role: { role_type, role_name },
       name,
       email,
       password,
@@ -39,13 +39,13 @@ exports.userLogin = async (req, res) => {
       $or: [{
         "email": _id
       }, {
-        "_id": _id
+        "user_id": _id
       }],
       password: password
     });
     console.log(user)
     if (user) {
-      res.status(200).json({ message: "Logged In Successfully" });
+      res.status(200).json({ message: "Logged In Successfully", data: user.role.role_type });
     } else {
       return res.json({ status: "error", user: false });
     }

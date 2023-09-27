@@ -1,4 +1,5 @@
 const User = require("../models/user.model");
+const CheckIn = require('../models/timeManagement.model')
 
 exports.addUser = async (req, res) => {
   try {
@@ -58,3 +59,44 @@ exports.addUser = async (req, res) => {
     res.status(500).json({ error: 'Failed to add user' });
   }
 };
+
+exports.getAllDetails = async(req,res) => {
+
+  try {
+    const uniqueIds = await User.find()
+
+    console.log(uniqueIds)
+    res.status(200).json({ message: 'got unique ids', data: uniqueIds})
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'an error occured', data: error})
+  }
+}
+
+exports.getEmployeeDetails = async(req, res) => {
+  try {
+
+    const user_id = req.params.user_id;
+
+    const isUser = await User.findOne({ user_id });
+
+
+    if (isUser) {
+      const user_objectId = isUser._id;
+
+      const employeeDetails = await CheckIn.aggregate([
+        {
+          $match: { user_id: user_objectId },
+        },
+      ]);
+
+      console.log(employeeDetails)
+      res.status(200).json({ message: 'got unique ids', data: employeeDetails})
+    }
+    
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'an error occured', data: error})
+  }
+}
