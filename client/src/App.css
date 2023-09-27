@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+.grid-container {
+  display: grid;
+  /* border: 2px solid #000; */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Adjust the column width as needed */
+  gap: 20px;
+  max-width: auto;
+  margin: 0 auto;
+  padding: 80px;
+  background-color: #cdbfd2;
+}

@@ -4,7 +4,6 @@ import {
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
 } from '@mui/icons-material';
-import { useMutation } from 'react-query';
 import {
   Avatar,
   Box,
@@ -22,7 +21,6 @@ import {
 } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
-import users from '../../db.json'
 
 const MainDiv = styled.div({
   backgroundColor: 'black',
@@ -153,7 +151,7 @@ const LoginRoute = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="/">
+              <Link to="/login">
                 <Typography color="secondary">Forgot password?</Typography>
               </Link>
             </Grid>
