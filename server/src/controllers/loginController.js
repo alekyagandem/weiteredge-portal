@@ -47,7 +47,7 @@ exports.userLogin = async (req, res) => {
     if (user) {
       res.status(200).json({ message: "Logged In Successfully", data: user.role.role_type });
     } else {
-      return res.json({ status: "error", user: false });
+      res.status(500).json({ error: 'user not found', data: user });
     }
   } catch (error) {
     console.log(error, "error");
