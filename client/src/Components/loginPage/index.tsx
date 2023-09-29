@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   LockOutlined as LockOutlinedIcon,
   Visibility as VisibilityIcon,
   VisibilityOff as VisibilityOffIcon,
-} from '@mui/icons-material';
+} from "@mui/icons-material";
 import {
   Avatar,
   Box,
@@ -18,73 +18,82 @@ import {
   InputLabel,
   OutlinedInput,
   Typography,
-} from '@mui/material';
-import { Link, useNavigate } from 'react-router-dom';
-import styled from '@emotion/styled';
+} from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "@emotion/styled";
+import axios from "axios";
+import { connect, DispatchProp } from "react-redux";
 
 const MainDiv = styled.div({
-  backgroundColor: 'black',
-  display: 'flex',
-  height: '100vh',
-  justifyContent: 'center',
-  alignItems: 'center'
-})
+  backgroundColor: "black",
+  display: "flex",
+  height: "100vh",
+  justifyContent: "center",
+  alignItems: "center",
+});
 const FormContainer = styled(Container)({
-  color: 'white',
-  backgroundColor: '#1F1F1F',
+  color: "white",
+  backgroundColor: "#1F1F1F",
   padding: 70,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  margin: '75px',
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  flexDirection: "column",
+  margin: "75px",
   a: {
-    textDecoration: 'none',
+    textDecoration: "none",
   },
   input: {
-    color: 'white',
-    borderColor: 'white',
+    color: "white",
+    borderColor: "white",
   },
 });
 
-const database = [
-  {
-      "email": "user1",
-      "password": "pass1"
-  },
-  {
-      "email": "user2",
-      "password": "pass2"
-  }
-]
+interface LoginRouteProps {
+  dispatch: DispatchProp['dispatch']; 
+  
+}
 
-const LoginRoute = () => {
+const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
   const [form, setForm] = useState<{ email: string; password: string }>({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
 
   const handleFormChange = (field: string, value: string) => {
     setForm((prevForm) => ({ ...prevForm, [field]: value }));
-    console.log(form)
+    console.log(form);
   };
 
-  const handleSubmit = () => {
-    const User = database.find((user) => user.email === form.email)
+  const loggingIn = async (event: { preventDefault: () => void }) => {
+    event.preventDefault();
 
-    if(User){
-      if(User.password === form.password){  
-        console.log('logged In successfully')
+    try {
+      const response = await axios.post(`http://localhost:2700/auth/login/`, {
+        _id: form.email,
+        password: form.password,
+      });
+
+      const data = await response;
+      console.log(data.status,data.data);
+
+      if (data.status == 200 && data.data.data == "user") {
+        localStorage.setItem("role_id", data.data.data);
+        localStorage.setItem("loggedIn", "true");
+        dispatch({ type: "ROLE", payload: "user" });
+        console.log(localStorage.getItem("role_id"))
       }
+    } catch (error) {
+      console.log(error);
+      // window.alert("Can't Assign Same Track Name")
     }
-  }
+  };
 
   return (
     <MainDiv>
-      <FormContainer maxWidth="sm" >
-        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+      <FormContainer maxWidth="sm">
+        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
@@ -93,11 +102,11 @@ const LoginRoute = () => {
         {/*@ts-ignore*/}
         <Box noValidate sx={{ mt: 1 }}>
           <FormControl variant="outlined" fullWidth required sx={{ my: 2 }}>
-            <InputLabel htmlFor="email-input" sx={{ color: 'white' }}>
+            <InputLabel htmlFor="email-input" sx={{ color: "white" }}>
               Email
             </InputLabel>
             <OutlinedInput
-              onChange={(e) => handleFormChange('email', e.target.value)}
+              onChange={(e) => handleFormChange("email", e.target.value)}
               value={form.email}
               autoFocus
               id="email-input"
@@ -107,13 +116,13 @@ const LoginRoute = () => {
 
           <FormControl variant="outlined" fullWidth required sx={{ my: 2 }}>
             <>
-              <InputLabel htmlFor="password-input" sx={{ color: 'white' }}>
+              <InputLabel htmlFor="password-input" sx={{ color: "white" }}>
                 Password
               </InputLabel>
               <OutlinedInput
-                onChange={(e) => handleFormChange('password', e.target.value)}
+                onChange={(e) => handleFormChange("password", e.target.value)}
                 value={form.password}
-                type={showPassword ? 'text' : 'password'}
+                type={showPassword ? "text" : "password"}
                 id="password-input"
                 label="Password"
                 color="primary"
@@ -125,9 +134,9 @@ const LoginRoute = () => {
                       edge="end"
                     >
                       {showPassword ? (
-                        <VisibilityIcon sx={{ fill: 'white' }} />
+                        <VisibilityIcon sx={{ fill: "white" }} />
                       ) : (
-                        <VisibilityOffIcon sx={{ fill: 'white' }} />
+                        <VisibilityOffIcon sx={{ fill: "white" }} />
                       )}
                     </IconButton>
                   </InputAdornment>
@@ -142,7 +151,7 @@ const LoginRoute = () => {
             label="Remember me"
           />
           <Button
-            onClick={() => handleSubmit()}
+            onClick={loggingIn}
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
@@ -151,7 +160,7 @@ const LoginRoute = () => {
           </Button>
           <Grid container>
             <Grid item xs>
-              <Link to="/login">
+              <Link to="/">
                 <Typography color="secondary">Forgot password?</Typography>
               </Link>
             </Grid>
@@ -165,8 +174,8 @@ const LoginRoute = () => {
           </Grid>
         </Box>
       </FormContainer>
-      </MainDiv>
+    </MainDiv>
   );
 };
 
-export default LoginRoute;
+export default connect()(LoginRoute);
