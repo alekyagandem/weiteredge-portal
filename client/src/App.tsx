@@ -13,14 +13,20 @@ import { MyProvider } from "./Components/loggedin/Mycontext";
 import LoginComponent from "./Components/loginPage/index";
 import  {Options} from "./Components/loggedin/options";
 import Sidebar from "./Components/loggedin/SideBar";
+import GridContainer from "./Components/loggedin/GridContainer";
 import Checkin from "./Components/loggedin/Checkin";
 import Breaktime from "./Components/loggedin/Breaktime";
 import Timesheet from "./Components/loggedin/Timesheet";
+import styled from '@emotion/styled';
+
+
+
 
 function App() {
   const [activeLink, setActiveLink] = useState<String>("");
   return (
     <div className="App">
+      
       <Routes>
         <Route path="/login" element={<LoginComponent />} />
       </Routes>
@@ -28,18 +34,22 @@ function App() {
       <Routes>
         <Route path="/options" element={<Options/>} />
       </Routes>
-      <Routes>
-        <Route path="/options" element={<Timesheet/>} />
-      </Routes>
       
-      <div className="grid-container">
-        <Routes>
-        <Route path="/options" element={<Breaktime/>} />
+      
+      {/* <div className="grid-container"> */}
+        {/* <Routes>
+        <Route path="/options" element={<Breaktime checkinrun={false}/>} />
         </Routes>
         <Routes>
         <Route path="/options" element={<Checkin/>} />
+        </Routes> */}
+        <Routes>
+          <Route path="/options" element={<GridContainer/>}></Route>
         </Routes>
-      </div>
+        <Routes>
+        <Route path="/options" element={<Timesheet/>} />
+      </Routes>
+      {/* </div> */}
      
       <Sidebar setActiveLink={setActiveLink} />
       <p>Active Link: {activeLink}</p>
