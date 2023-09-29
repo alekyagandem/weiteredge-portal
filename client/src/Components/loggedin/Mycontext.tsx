@@ -1,19 +1,22 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
 // Define the type for your context value
 type MyContextType = {
   timeValue: number;
   checkoutValue:number;
   checkinValue:number;
+  breakValue: number;
   formatTime: (milliseconds: number) => {
     hours: string;
     minutes: string;
     seconds: string;
     centiseconds: string;
+    
   };
   updateTime: (newArg: number) => void;
   checkoutTime: (newArg: number) => void;
   checkinTime:(newArg: number) => void;
+  updateBreakTime: (newArg: (prevTime: number) => number) => void;
 };
 
 // Create a context with an initial value
@@ -24,10 +27,14 @@ type MyProviderProps = {
 };
 
 export function MyProvider({ children }: MyProviderProps) {
-  const [timeValue, settimeValue] = useState<number>(0); // State to hold the dynamically updated value
+  const [timeValue, settimeValue] = useState<number>(0); 
     const[checkoutValue,setCheckoutValue]=useState<number>(0);
     const[checkinValue,setCheckinValue]=useState<number>(0);
+    const [running, setRunning] = useState<boolean>(false);
+    const[breakValue,setBreakValue]=useState(0);
+
   const formatTime = (milliseconds: number) => {
+    //This function purpose is to take the time value which is passed in milliseconds and then derive the respective human readable format of it.
     const hours = Math.floor(milliseconds / 3600000);
     const minutes = Math.floor((milliseconds % 3600000) / 60000);
     const seconds = Math.floor((milliseconds % 60000) / 1000);
@@ -50,8 +57,11 @@ export function MyProvider({ children }: MyProviderProps) {
   const checkinTime = (newArg: number) => {
     setCheckinValue(newArg); 
   };
-  console.log("Dynamic Arggggggggggg",timeValue)
-  console.log("Valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",checkinValue)
+  const updateBreakTime = (newArg: (prevTime: number) => number) => {
+    setBreakValue((prevTime) => newArg(prevTime));
+  };
+  
+  
   const contextValue: MyContextType = {
     formatTime,
     timeValue,
@@ -59,7 +69,11 @@ export function MyProvider({ children }: MyProviderProps) {
     checkoutValue,
     checkoutTime,
     checkinTime,
-    checkinValue
+    checkinValue,
+    breakValue,
+    updateBreakTime
+    
+    
   };
 
   return (
