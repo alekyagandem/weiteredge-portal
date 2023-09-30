@@ -1,97 +1,127 @@
 
 // import React, { useState, useEffect } from "react";
 // import { useMyContext } from "./Mycontext";
+// import Breaktime from "./Breaktime";
+// import TextField from '@mui/material/TextField';
+
+// const buttonStyle = {
+//   backgroundColor: '#906697', // Blue background color
+//   color: '#fff', // White text color
+//   border: 'none',
+//   borderRadius: '4px',
+//   padding: '10px 20px',
+//   cursor: 'pointer',
+// };
 // const Checkin = () => {
-
- 
 //   const toMilliseconds = (hrs: number, min: number, sec: number, cs: number) =>
-//   (hrs * 60 * 60 + min * 60 + sec) * 1000 + cs;
+//     (hrs * 60 * 60 + min * 60 + sec) * 1000 + cs;
 
-// const now = new Date();
+//   const now = new Date();
+//   const day = now.getUTCDate();
+//   const month = now.getUTCMonth() + 1; // Month is zero-based, so add 1
+//   const year = now.getUTCFullYear();
 
-// const milliseconds = toMilliseconds(
-//   now.getHours(),
-//   now.getMinutes(),
-//   now.getSeconds(),
-//   now.getMilliseconds()
-// );
+//   const [time, setTime] = useState<number>(
+//     toMilliseconds(
+//       now.getHours(),
+//       now.getMinutes(),
+//       now.getSeconds(),
+//       now.getMilliseconds()
+//     )
+//   );
+//   // console.log("Checkin Timestamp",day,month,year)
+//   const [running, setRunning] = useState<boolean>(false);//This state defines the activeness of the checkin button
+//   const { formatTime, checkoutTime,checkinTime,checkoutValue } = useMyContext();
+//   const [inTime, setCheckinTime] = useState(0);
 
-// console.log("Current time in milliseconds:", milliseconds);
+//   useEffect(() => {
+//    let interval: string | number | NodeJS.Timeout | undefined;
 
-//     const [time, setTime] = useState(milliseconds);
-//     const [running, setRunning] = useState(false);
-//     const {formatTime , checkoutTime}= useMyContext();
-//     if(!running)
-//     {
-//     checkoutTime(time);
+//     if (running) {
+//       interval = setInterval(() => {
+//         setTime((prevTime) => prevTime + 10);
+//       }, 10);
+//     } else if (!running) {
+//       clearInterval(interval);
 //     }
-//     // const formatTime = (milliseconds: number) => {
-//     //   const hours = Math.floor(milliseconds / 3600000);
-//     //   const minutes = Math.floor((milliseconds % 3600000) / 60000);
-//     //   const seconds = Math.floor((milliseconds % 60000) / 1000);
-//     //   const centiseconds = Math.floor((milliseconds% 1000) / 10);
-//     //   return {
-//     //     hours: String(hours).padStart(2, '0'),
-//     //     minutes: String(minutes).padStart(2, '0'),
-//     //     seconds: String(seconds).padStart(2, '0'),
-//     //     centiseconds: String(centiseconds).padStart(2, '0'),
-//     //   };
-      
-//     // };
 
-//     useEffect(() => {
+//     return () => {
+//       clearInterval(interval);
+//     };
+//   }, [running]);
+
+//   const handleCheckinCheckout = () => {
+//     if (running) {
+//       // Checking out
+//       checkoutTime(time);//Here 'time' represents the current time,which is always updated through the above useEffect method and thus can be passed actively.
+//     } else {
+//       // Checking in
       
-//       let interval: string | number | NodeJS.Timeout | undefined;
-//       if (running) {
-//         console.log("To print running interval",interval)
-//         interval = setInterval(() => {
-//           setTime((prevTime) => prevTime + 10);
-//         }, 10);
-//       } else if (!running) {
-//         clearInterval(interval);
-//       }
-//       return () => clearInterval(interval);
-//     }, [running]);
-//     return (
+//       setCheckinTime(time);
+    
+//       checkinTime(time);
        
-//       <div className="checkin">
-//         <div className="numbers">
-//         <span>{formatTime(time).hours}:</span>
-//           <span>{formatTime(time).minutes}:</span>
-//           <span>{formatTime(time).seconds}:</span>
-//           <span>{formatTime(time).centiseconds}:</span>
-//         </div>
-        
-//         <div className="buttons">
+//     }
 
-            
-//                     {running ? (
-//             <button onClick={() => setRunning(false)}>Checkout</button>
-//             ) : (
-//             <button onClick={() => setRunning(true)}>Checkin</button>
-//             )}
-            
-            
-//           {/* <button onClick={() => setRunning(true)}>Checkin</button>
-//           <button onClick={() => setRunning(false)}>Checkout</button>
-//           <button onClick={() => setTime(0)}>Reset</button>        */}
-//         </div>
+//     setRunning(!running);
+//   };
+//   //console.log("Checkout value",checkoutValue)
+
+
+//   return (
+//     <div className="checkin">
+//       <div className="numbers">
+//         <span>{formatTime(time).hours}:</span>
+//         <span>{formatTime(time).minutes}:</span>
+//         <span>{formatTime(time).seconds}:</span>
+//         <span>{formatTime(time).centiseconds}:</span>
 //       </div>
 
-      
-      
-//     );
-//   };
-// export default Checkin;
+//       <div className="buttons">
+//         <button onClick={handleCheckinCheckout} style={buttonStyle}>
+//           {running ? "Checkout" : "Checkin"}
+//         </button>
+//       </div>
 
+//       {/* {inTime !== null && (
+//         <div>
+//           <p>Check-in time:</p>
+//           <p>
+//             {formatTime(inTime).hours}:
+//             {formatTime(inTime).minutes}:
+//             {formatTime(inTime).seconds}.
+//             {formatTime(inTime).centiseconds}
+//           </p>
+//         </div>
+//       )} */}
+//       <Breaktime checkinrun={running}/>
+//     </div>
+//   );
+// };
+
+// export default Checkin;
 import React, { useState, useEffect } from "react";
 import { useMyContext } from "./Mycontext";
+import Breaktime from "./Breaktime";
+import TextField from '@mui/material/TextField';
+
+const buttonStyle = {
+  backgroundColor: '#906697', // Blue background color
+  color: '#fff', // White text color
+  border: 'none',
+  borderRadius: '4px',
+  padding: '10px 20px',
+  cursor: 'pointer',
+};
 
 const Checkin = () => {
   const toMilliseconds = (hrs: number, min: number, sec: number, cs: number) =>
     (hrs * 60 * 60 + min * 60 + sec) * 1000 + cs;
 
   const now = new Date();
+  const day = now.getUTCDate();
+  const month = now.getUTCMonth() + 1; // Month is zero-based, so add 1
+  const year = now.getUTCFullYear();
 
   const [time, setTime] = useState<number>(
     toMilliseconds(
@@ -101,41 +131,39 @@ const Checkin = () => {
       now.getMilliseconds()
     )
   );
-  const [running, setRunning] = useState<boolean>(false);
-  const { formatTime, checkoutTime,checkinTime } = useMyContext();
-  const [inTime, setCheckinTime] = useState(0);
+
+  const { formatTime, checkoutTime, checkinTime, checkoutValue } = useMyContext();
+  const [inTime, setCheckinTime] = useState<number | null>(null);
+  const [running, setRunning] = useState<boolean>(false); // This state defines the activeness of the check-in button
 
   useEffect(() => {
-   let interval: string | number | NodeJS.Timeout | undefined;
-
-    if (running) {
-      interval = setInterval(() => {
-        setTime((prevTime) => prevTime + 10);
-      }, 10);
-    } else if (!running) {
-      clearInterval(interval);
-    }
+    const interval = setInterval(() => {
+      setTime((prevTime) => prevTime + 10);
+    }, 10);
 
     return () => {
       clearInterval(interval);
     };
-  }, [running]);
+  }, []); // Start the timer once when the component mounts
 
   const handleCheckinCheckout = () => {
-    if (running) {
-      // Checking out
-      checkoutTime(time);
-    } else {
-      // Checking in
-      
+    if (!running) {
+      // Checking in for the first time
       setCheckinTime(time);
       checkinTime(time);
-       
+    } else {
+      // Checking out
+      checkoutTime(time);
     }
 
     setRunning(!running);
   };
 
+  useEffect(()=>{
+    if(inTime!==null)
+    console.log("InTime Value", formatTime(inTime));
+  console.log("Running",running)
+  },[inTime,running])
   return (
     <div className="checkin">
       <div className="numbers">
@@ -146,8 +174,8 @@ const Checkin = () => {
       </div>
 
       <div className="buttons">
-        <button onClick={handleCheckinCheckout}>
-          {running ? "Checkout" : "Checkin"}
+        <button onClick={handleCheckinCheckout} style={buttonStyle}>
+          {running ? (inTime === null ? "Checkin" : "Checkout") : "Checkin"}
         </button>
       </div>
 
@@ -162,6 +190,7 @@ const Checkin = () => {
           </p>
         </div>
       )}
+      <Breaktime checkinrun={running} />
     </div>
   );
 };
