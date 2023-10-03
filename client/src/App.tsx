@@ -9,7 +9,7 @@ import {
   Navigate,
   RouterProvider,
 } from "react-router-dom";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { MyProvider } from "./Components/loggedin/Mycontext";
 import LoginComponent from "./Components/loginPage/index";
 import { Options } from "./Components/loggedin/options";

@@ -6,7 +6,7 @@ import { useUserContext } from "../loginPage/Usercontext";
 import axios from "axios";
 
 const buttonStyle = {
-  backgroundColor: '#906697', // Blue background color
+  backgroundColor: '#009DDA', // Blue background color
   color: '#fff', // White text color
   border: 'none',
   borderRadius: '4px',
@@ -140,8 +140,7 @@ const currentDate=year+'-'+month+'-'+day
       <div className="numbers">
         <span>{formatTime(time).hours}:</span>
         <span>{formatTime(time).minutes}:</span>
-        <span>{formatTime(time).seconds}:</span>
-        <span>{formatTime(time).centiseconds}:</span>
+        <span>{formatTime(time).seconds}</span>
       </div>
 
       <div className="buttons">
@@ -156,8 +155,7 @@ const currentDate=year+'-'+month+'-'+day
           <p>
             {formatTime(inTime).hours}:
             {formatTime(inTime).minutes}:
-            {formatTime(inTime).seconds}.
-            {formatTime(inTime).centiseconds}
+            {formatTime(inTime).seconds}
           </p>
         </div>
       )}

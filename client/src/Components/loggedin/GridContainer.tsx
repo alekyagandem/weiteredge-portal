@@ -20,7 +20,7 @@ import Checkin from './Checkin';
 // `;
 
 const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'light' ? '#ce93d8' : '#9400D3',
+  backgroundColor: theme.palette.mode === 'light' ? '#62BA47' : '#9400D3',
   ...theme.typography.body2,
   padding: theme.spacing(1),
   textAlign: 'center',
