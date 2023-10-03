@@ -47,12 +47,13 @@ export function MyProvider({ children }: MyProviderProps) {
     };
     
   };
-
+  
   const updateTime = (newArg: number) => {
     settimeValue(newArg); 
   };
-  const checkoutTime = (newArg: number) => {
-    setCheckoutValue(newArg); 
+  const checkoutTime =async (newArg: number) => {
+    setCheckoutValue(newArg);
+    
   };
   const checkinTime = (newArg: number) => {
     setCheckinValue(newArg); 

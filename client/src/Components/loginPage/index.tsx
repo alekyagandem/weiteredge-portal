@@ -23,6 +23,8 @@ import { Link, useNavigate } from "react-router-dom";
 import styled from "@emotion/styled";
 import axios from "axios";
 import { connect, DispatchProp } from "react-redux";
+import { useUserContext } from "./Usercontext";
+
 
 const MainDiv = styled.div({
   backgroundColor: "black",
@@ -60,6 +62,8 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const { setUser } = useUserContext();
 
   const handleFormChange = (field: string, value: string) => {
     setForm((prevForm) => ({ ...prevForm, [field]: value }));
@@ -76,13 +80,17 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
       });
 
       const data = await response;
-      console.log(data.status,data.data);
-
-      if (data.status == 200 && data.data.data == "user") {
-        localStorage.setItem("role_id", data.data.data);
+      const userData=data.data.data
+      setUser(userData)
+      console.log(data.status,data);
+      console.log("Print data",data.data)
+      console.log("ROLE",data.data.data.role)
+      if (data.status == 200 && data.data.data.role.role_type == "user") {
+        // localStorage.setItem("role_id", data.data.data);
         localStorage.setItem("loggedIn", "true");
         dispatch({ type: "ROLE", payload: "user" });
-        console.log(localStorage.getItem("role_id"))
+        // console.log(localStorage.getItem("role_id"))
+        navigate("/options")
       }
     } catch (error) {
       console.log(error);

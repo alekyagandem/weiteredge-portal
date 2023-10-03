@@ -19,69 +19,52 @@ import Checkin from "./Components/loggedin/Checkin";
 import Breaktime from "./Components/loggedin/Breaktime";
 import Timesheet from "./Components/loggedin/Timesheet";
 import styled from '@emotion/styled';
-
-
-
-
+import { UserProvider } from "./Components/loginPage/Usercontext";
 function App() {
   const [activeLink, setActiveLink] = useState<String>("");
-  // const[isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  useEffect(() => {
-    console.log(localStorage.getItem("role_id"))
-  });
+  const isAuthenticated = localStorage.getItem("role_id") === "user";
+  const isLoggedin =localStorage.getItem("loggedIn") === "true"
+  const shouldDisplaySidebar = isAuthenticated; // Display the sidebar only for authenticated users
+  console.log("isAuthenticated",isAuthenticated)
+  console.log("Role_id",localStorage.getItem("role_id"),localStorage.getItem("loggedIn"))
 
   return (
     <div className="App">
 
+      <UserProvider>
+
+
       {
          (localStorage.getItem('role_id') === "null" || localStorage.getItem('loggedIn') != "true")  &&
          <>
+
       <Routes>
+        {/* (localStorage.getItem('role_id') === "null" ) && */}
         <Route path="/" element={<LoginComponent />} />
-        <Route path="/login" element={<LoginComponent />} />
-      </Routes>
-
-      </>
-}
-
-      {localStorage.getItem("loggedIn") === "true" && (
-        <>
-          {localStorage.getItem("role_id") === "user" && (
-            <>
-              <MyProvider>
+        <Route
+          path="/options"
+          element={
+            isAuthenticated && isLoggedin ? (
+              <>
+                <MyProvider>
+                  <Sidebar setActiveLink={setActiveLink} />
+                  <p>Active Link: {activeLink}</p>
                 
-
-                <Routes>
-        <Route path="/options" element={<Options/>} />
+                <Options />
+                <GridContainer />
+                <Timesheet />
+                </MyProvider>
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
       </Routes>
-      
-      
-      {/* <div className="grid-container"> */}
-        {/* <Routes>
-        <Route path="/options" element={<Breaktime checkinrun={false}/>} />
-        </Routes>
-        <Routes>
-        <Route path="/options" element={<Checkin/>} />
-        </Routes> */}
-        <Routes>
-          <Route path="/options" element={<GridContainer/>}></Route>
-        </Routes>
-        <Routes>
-        <Route path="/options" element={<Timesheet/>} />
-      </Routes>
-                
-      {/* </div> */}
-                <Sidebar setActiveLink={setActiveLink} />
-                <p>Active Link: {activeLink}</p>
-              </MyProvider>
-            </>
-          )}
-        </>
-      )}
+      </UserProvider>
     </div>
   );
 }
-
 const mapStateToProps = (state: { role: any; }) => ({
   role: state.role
 });
