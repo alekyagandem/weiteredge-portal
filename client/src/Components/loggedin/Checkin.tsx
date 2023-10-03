@@ -106,7 +106,7 @@ import Breaktime from "./Breaktime";
 import TextField from '@mui/material/TextField';
 
 const buttonStyle = {
-  backgroundColor: '#906697', // Blue background color
+  backgroundColor: '#009DDA', // Blue background color
   color: '#fff', // White text color
   border: 'none',
   borderRadius: '4px',
@@ -169,8 +169,7 @@ const Checkin = () => {
       <div className="numbers">
         <span>{formatTime(time).hours}:</span>
         <span>{formatTime(time).minutes}:</span>
-        <span>{formatTime(time).seconds}:</span>
-        <span>{formatTime(time).centiseconds}:</span>
+        <span>{formatTime(time).seconds}</span>
       </div>
 
       <div className="buttons">
@@ -185,8 +184,7 @@ const Checkin = () => {
           <p>
             {formatTime(inTime).hours}:
             {formatTime(inTime).minutes}:
-            {formatTime(inTime).seconds}.
-            {formatTime(inTime).centiseconds}
+            {formatTime(inTime).seconds}
           </p>
         </div>
       )}
