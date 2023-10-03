@@ -15,7 +15,7 @@ const SideBar: React.FC<SidebarProps> = ({ setActiveLink }) => {
           </a>
         </li>
         <li>
-          <a href="/#" onClick={() => setActiveLink("Settings")}>
+          <a href="/settings#" onClick={() => setActiveLink("Settings")}>
             Settings
           </a>
         </li>
