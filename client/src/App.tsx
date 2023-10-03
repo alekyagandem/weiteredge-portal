@@ -18,80 +18,55 @@ import GridContainer from "./Components/loggedin/GridContainer";
 import Checkin from "./Components/loggedin/Checkin";
 import Breaktime from "./Components/loggedin/Breaktime";
 import Timesheet from "./Components/loggedin/Timesheet";
-import styled from "@emotion/styled";
-
+import styled from '@emotion/styled';
+import { UserProvider } from "./Components/loginPage/Usercontext";
 function App() {
   const [activeLink, setActiveLink] = useState<String>("");
-  // const[isUserLoggedIn, setIsUserLoggedIn] = useState(false);
-  useEffect(() => {
-    console.log(localStorage.getItem("role_id"));
-  });
-  console.log(localStorage.getItem("role_id"));
+  const isAuthenticated = localStorage.getItem("role_id") === "user";
+  const isLoggedin =localStorage.getItem("loggedIn") === "true"
+  const shouldDisplaySidebar = isAuthenticated; // Display the sidebar only for authenticated users
+  console.log("isAuthenticated",isAuthenticated)
+  console.log("Role_id",localStorage.getItem("role_id"),localStorage.getItem("loggedIn"))
 
   return (
     <div className="App">
-      {(localStorage.getItem("role_id") === "null" ||
-        localStorage.getItem("loggedIn") != "true") && (
-        <>
-          <Routes>
-            <Route path="/" element={<LoginComponent />} />
-            <Route path="/login" element={<LoginComponent />} />
-          </Routes>
-        </>
-      )}
 
-      {localStorage.getItem("loggedIn") === "true" && (
-        <>
-          {localStorage.getItem("role_id") === "user" && (
-            <>
-              <MyProvider>
-                <Routes>
-                  <Route path="/options" element={<Options />} />
-                </Routes>
+      <UserProvider>
 
-                <Sidebar setActiveLink={setActiveLink} />
 
-                {/* <div className="grid-container"> */}
-                {/* <Routes>
-        <Route path="/options" element={<Breaktime checkinrun={false}/>} />
-        </Routes>
-        <Routes>
-        <Route path="/options" element={<Checkin/>} />
-        </Routes> */}
-                <Routes>
-                  <Route path="/options" element={<GridContainer />}></Route>
-                </Routes>
-                <Routes>
-                  <Route path="/options" element={<Timesheet />} />
-                </Routes>
-              </MyProvider>
-            </>
-          )}
-        </>
-      )}
+      {
+         (localStorage.getItem('role_id') === "null" || localStorage.getItem('loggedIn') != "true")  &&
+         <>
 
-      {localStorage.getItem("loggedIn") === "true" && (
-        <>
-          {localStorage.getItem("role_id") === "admin" && (
-            <>
-              <MyProvider>
-                <Routes>
-                  <Route path="/options" element={<Options />} />
-                </Routes>
-                <Routes>
-                  <Route path="/options" element={<Timesheet />} />
-                </Routes>
-              </MyProvider>
-            </>
-          )}
-        </>
-      )}
+      <Routes>
+        {/* (localStorage.getItem('role_id') === "null" ) && */}
+        <Route path="/" element={<LoginComponent />} />
+        <Route
+          path="/options"
+          element={
+            isAuthenticated && isLoggedin ? (
+              <>
+                <MyProvider>
+                  <Sidebar setActiveLink={setActiveLink} />
+                  <p>Active Link: {activeLink}</p>
+                
+                <Options />
+                <GridContainer />
+                <Timesheet />
+                </MyProvider>
+              </>
+            ) : (
+              <Navigate to="/" />
+            )
+          }
+        />
+      </Routes>
+      </UserProvider>
     </div>
   );
 }
-
-const mapStateToProps = (state: { role: any }) => ({
-  role: state.role,
+const mapStateToProps = (state: { role: any; }) => ({
+  role: state.role
 });
 
 export default connect(mapStateToProps)(App);

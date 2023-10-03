@@ -11,6 +11,11 @@ const adminRoutes = require('./src/routes/adminRoutes')
 app.use(cors())
 app.use(express.json())
 
+// mongoose.connect('mongodb://127.0.0.1:27017/management').then(db =>{
+
+//     console.log('MONGO connected');
+
+// }).catch(error=> console.log(error));
 mongoose.connect('mongodb://localhost:27017/management')
 
 app.use('/auth', loginRoutes)
