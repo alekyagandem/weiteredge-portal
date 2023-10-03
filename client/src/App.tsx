@@ -30,7 +30,14 @@ function App() {
 
   return (
     <div className="App">
+
       <UserProvider>
+
+
+      {
+         (localStorage.getItem('role_id') === "null" || localStorage.getItem('loggedIn') != "true")  &&
+         <>
+
       <Routes>
         {/* (localStorage.getItem('role_id') === "null" ) && */}
         <Route path="/" element={<LoginComponent />} />
@@ -61,6 +68,5 @@ function App() {
 const mapStateToProps = (state: { role: any; }) => ({
   role: state.role
 });
-console.log(mapStateToProps);
 
 export default connect(mapStateToProps)(App);
