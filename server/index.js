@@ -22,6 +22,6 @@ app.use('/auth', loginRoutes)
 app.use('/user', timeManagementRoutes)
 app.use('/admin', adminRoutes)
 
-app.listen(2700, () => {
+app.listen(5000, () => {
     console.log('server started')
 }) 
