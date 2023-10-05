@@ -66,13 +66,13 @@ const currentDate=year+'-'+month+'-'+day
     };
   }, []);
 
-  const updateBreakEndTime = (time: number) => {
-    if(breakStatus==="started")
-    {
-    setBreakEndTime(time);
-     
-    }
-};
+  const updateBreakEndTime = async (time: number) => {
+    setBreakEndTime(time); // Update the state first
+    await new Promise((resolve) => setTimeout(resolve, 0)); // Wait for the state to update
+    // Now, you can call the function that depends on the updated state
+    await fun(breakStartTime, time);
+  };
+  
   useEffect(() => {
     // When checkinValue changes, reset the time to 0
     updateBreakTime((prevTime) => 0);
@@ -87,79 +87,22 @@ const currentDate=year+'-'+month+'-'+day
     const date = new Date(isoTimestamp);
     return date;
   }
-  function getCurrentTimestampISO(time: string | number | Date) {
+  function getCurrentTimestampISO(time: string | number | Date |null) {
    // const time = Date.now();
+   if(time!==null){
     const today = new Date(time);
     const final = today.toISOString();
     return final;
+   }
+   else return null;
   }
-   const postBreaktimeData = async (breakStartTime: number,breakEndTime: number) => {
-    const breakstart = formatTime(breakStartTime);
-    const formattedBreakStarttime = `${breakstart.hours}:${breakstart.minutes}:${breakstart.seconds}.${breakstart.centiseconds}Z`;
-    const final = `${currentDate}T${formattedBreakStarttime}`;
-    const final1 = new Date(final);
-    const breakend = formatTime(breakEndTime); 
-    const formattedBreakEndtime = `${breakend.hours}:${breakend.minutes}:${breakend.seconds}.${breakend.centiseconds}Z`;
-    const finalend = `${currentDate}T${formattedBreakEndtime}`;
-    const final2 = new Date(finalend);
-    const id = user?.user_id;
-    try {
-      const response = await axios.post<ResponseType>(`http://localhost:2700/user/breakStart/${id}`, {
-        // Your request data goes here
-       break_start:final1,
-       break_end:final2
-      });
-
-      // Handle the response data
-      setBreaktimeData(response.data);
-    } catch (error) {
-      // Handle errors here
-      console.error('Error:', error);
-    }
-  };
-
-    const handleChange = async () => {
-        setChecked((prevChecked) => !prevChecked);
-        if (!checked && (checkoutValue !== null || 0)) {
-          setRunning(true);
-          const currentTimestamp = now.getTime();
-          setBreakStartTime(time);
-          setBreakStatus("started");
-        } else {
-          setRunning(false);
-          updateTime(breakValue);
-          if (breakStatus === "started") {
-            const currentTimestamp = now.getTime();
-            const elapsedTime = time - (breakStartTime as number);
-               // setBreakEndTime(time);
-               updateBreakEndTime(time);
-           // updateBreakTime((prevTime) => prevTime + elapsedTime);
-            // await postBreaktimeData(breakStartTime,breakEndTime);
-            setBreakStatus("ended");
-          }
-        }
-      };
-    
-    useEffect(() => {
-        console.log("Break Start Time", getCurrentTimestampISO(breakStartTime));
-      }, [breakStartTime]);
-      
-    useEffect(() => {
-        console.log("Break End Time",getCurrentTimestampISO(breakEndTime));
-        if((breakStartTime!== null || -1)&& (breakEndTime!==null || -1))
-         postBreaktimeData(breakStartTime,breakEndTime);
-      }, [breakEndTime]);
-    useEffect(() => {
-        console.log("Checked", checked);
-      }, [checked]);
-      
-
-   useEffect(() => {
+  useEffect(() => {
     let interval: string | number | NodeJS.Timeout | undefined;
   
     if (running && checkinrun) {
-      interval = window.setInterval(() => {
+      interval = window.setInterval(async () => {
         updateBreakTime((prevTime: number) => prevTime + 10);
+        await new Promise((resolve) => setTimeout(resolve, 0));
       }, 10);
     } else {
       clearInterval(interval);
@@ -176,6 +119,84 @@ const currentDate=year+'-'+month+'-'+day
       }
     };
   }, [running, checkinrun]);
+   const postBreaktimeData = async (breakStartTime: number,breakEndTime: number) => {
+    const breakstart = formatTime(breakStartTime);
+    const formattedBreakStarttime = `${breakstart.hours}:${breakstart.minutes}:${breakstart.seconds}.${breakstart.centiseconds}Z`;
+    const final = `${currentDate}T${formattedBreakStarttime}`;
+    const final1 = new Date(final);
+    const breakend = formatTime(breakEndTime); 
+    const formattedBreakEndtime = `${breakend.hours}:${breakend.minutes}:${breakend.seconds}.${breakend.centiseconds}Z`;
+    const finalend = `${currentDate}T${formattedBreakEndtime}`;
+    const final2 = new Date(finalend);
+    const breakval = formatTime(breakValue); 
+    const formattedBreakVal = `${breakval.hours}:${breakval.minutes}:${breakval.seconds}.${breakval.centiseconds}Z`;
+    const finalv = `${currentDate}T${formattedBreakVal}`;
+    const final3 = new Date(finalv);
+    const totalbreak_time = final3.toISOString();
+    // const final1=getCurrentTimestampISO(breakStartTime);
+    // const final2=getCurrentTimestampISO(breakEndTime);
+    // const totalbreak_time=getCurrentTimestampISO(breakValue)
+    const id = user?.user_id;
+    console.log("break_start:", final);
+    console.log("break_end:", finalend);
+    console.log("breakvalue",finalv)
+    try {
+      const response = await axios.post<ResponseType>(`http://localhost:2700/user/breakStart/${id}`, {
+        // Your request data goes here
+       break_start:final1,
+       break_end:final2,
+       totalbreak_time:finalv
+      });
+
+      // Handle the response data
+      setBreaktimeData(response.data);
+    } catch (error) {
+      // Handle errors here
+      console.error('Error:', error);
+    }
+  };
+  const fun=async(brkstart: number ,brkend: number)=>{
+    // console.log("Break End Time",getCurrentTimestampISO(breakEndTime))
+    
+      console.log("This part of code has been invoked")
+     postBreaktimeData(brkstart,brkend);
+    
+  }
+
+
+    const handleChange = async () => {
+        setChecked((prevChecked) => !prevChecked);
+        if (!checked && (checkoutValue !== null || 0)) {
+          setRunning(true);
+          const currentTimestamp = now.getTime();
+          setBreakStartTime(time);
+          setBreakStatus("started");
+        } else {
+          setRunning(false);
+          updateTime(breakValue);
+          if (breakStatus === "started") {
+            const currentTimestamp = now.getTime();
+            const elapsedTime = time - (breakStartTime as number);
+              // setBreakEndTime(time);
+             await  updateBreakEndTime(time);
+           // updateBreakTime((prevTime) => prevTime + elapsedTime);
+          
+            // await postBreaktimeData(breakStartTime,breakEndTime);
+            setBreakStatus("ended");
+          }
+        }
+      };
+    
+    // useEffect(() => {
+    //     console.log("Break Start Time", getCurrentTimestampISO(breakStartTime));
+    //   }, [breakStartTime]);
+      
+
+    useEffect(() => {
+        console.log("Checked", checked);
+      }, [checked]);
+      
+
   useEffect(() => {
     // When checkinValue changes, reset the time to 0
 
