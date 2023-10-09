@@ -17,7 +17,9 @@ const checkIn = new mongoose.Schema(
         break_start: { type: Date, default: null },
         break_end: { type: Date, default: null },
       },
+      
     ],
+    totalbreak_time:{type:String,default:null},
     user_id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "UserData",

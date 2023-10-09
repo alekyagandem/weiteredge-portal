@@ -64,8 +64,7 @@ exports.getAllDetails = async(req,res) => {
 
   try {
     const uniqueIds = await User.find()
-
-    console.log(uniqueIds)
+    //console.log(uniqueIds)
     res.status(200).json({ message: 'got unique ids', data: uniqueIds})
     
   } catch (error) {
@@ -91,11 +90,26 @@ exports.getEmployeeDetails = async(req, res) => {
         },
       ]);
 
-      console.log(employeeDetails)
+     // console.log(employeeDetails)
       res.status(200).json({ message: 'got unique ids', data: employeeDetails})
     }
     
   } catch (error) {
+    console.log(error)
+    res.status(500).json({ error: 'an error occured', data: error})
+  }
+}
+
+exports.getbyuserId=async(req,res)=>{
+  try {
+
+    const user_id = req.params.user_id;
+
+    const isUser = await User.findOne({ user_id });
+      res.status(200).json({ message: 'identified user', data: isUser})
+    }
+    
+  catch (error) {
     console.log(error)
     res.status(500).json({ error: 'an error occured', data: error})
   }

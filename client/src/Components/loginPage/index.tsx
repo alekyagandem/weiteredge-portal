@@ -86,11 +86,20 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
       console.log("Print data",data.data)
       console.log("ROLE",data.data.data.role)
       if (data.status == 200 && data.data.data.role.role_type == "user") {
-        // localStorage.setItem("role_id", data.data.data);
+        localStorage.setItem("role_id", data.data.data.role.role_type);
         localStorage.setItem("loggedIn", "true");
         dispatch({ type: "ROLE", payload: "user" });
         // console.log(localStorage.getItem("role_id"))
         navigate("/options")
+      }
+      else if(data.status == 200 && data.data.data.role.role_type == "admin")
+      {
+        localStorage.setItem("role_id", data.data.data.role.role_type);
+        localStorage.setItem("loggedIn", "true");
+        dispatch({ type: "ROLE", payload: "admin" });
+        console.log("Role_id for admin",localStorage.getItem("role_id"))
+        navigate("/table")
+
       }
     } catch (error) {
       console.log(error);

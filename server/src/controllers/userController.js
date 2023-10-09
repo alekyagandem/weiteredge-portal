@@ -7,7 +7,7 @@ exports.checkIn = async (req, res) => {
 
     // checking id given user is there in user collection
     const isUser = await User.findOne({ user_id });
-
+    console.log("User checkin")
     if (isUser) {
       console.log(isUser._id);
       const user_objectId = isUser._id;
@@ -49,6 +49,7 @@ exports.breakStartAndEnd = async (req, res) => {
     const user_id = req.params.user_id;
     const  break_start  = req.body.break_start;
     const break_end=req.body.break_end;
+    const totalbreak_time=req.body.totalbreak_time;
 
     const isUser = await User.findOne({ user_id });
 
@@ -79,8 +80,13 @@ exports.breakStartAndEnd = async (req, res) => {
 
               addBreak.breaks.push({
                 break_start: break_start,
-                break_end: break_end
+                break_end: break_end,
+                // totalbreak_time:totalbreak_time
               })
+              await CheckIn.findOneAndUpdate(
+                { checkIn_time: item.checkIn_time },
+                { $set: {  totalbreak_time:totalbreak_time } }
+              ); 
 
               addBreak.save()
 
