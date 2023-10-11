@@ -24,6 +24,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import { connect, DispatchProp } from "react-redux";
 import { useUserContext } from "./Usercontext";
+import { relative } from "path";
 
 
 const MainDiv = styled.div({
@@ -92,6 +93,7 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
         // console.log(localStorage.getItem("role_id"))
         navigate("/options")
       }
+
       else if(data.status == 200 && data.data.data.role.role_type == "admin")
       {
         localStorage.setItem("role_id", data.data.data.role.role_type);
@@ -163,7 +165,7 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
           </FormControl>
           <FormControlLabel
             control={
-              <Checkbox defaultChecked value="remember" color="secondary" />
+              <Checkbox defaultChecked value="remember" color="secondary"/>
             }
             label="Remember me"
           />
