@@ -71,6 +71,25 @@ const currentDate=year+'-'+month+'-'+day
 
   useEffect(() => {
     console.log("Updated checkoutValue in Checkin:", formatTime(checkoutValue));
+    if(!running && inTime!== null){
+      const checkouttime = formatTime(checkoutValue);
+    const formattedCheckouttime = `${checkouttime.hours}:${checkouttime.minutes}:${checkouttime.seconds}.${checkouttime.centiseconds}Z`;
+    const final = `${currentDate}T${formattedCheckouttime}`;
+    const finalDate = new Date(final);
+    const id = user?.user_id;
+    console.log("formatted checkin time from checkin",checkouttime)
+    try {
+      const response = axios.put<ResponseType>(`http://localhost:2700/user/checkOut/${id}`, {
+        checkout_date: finalDate,
+      });
+
+      // Handle the response data
+     // setcheckoutData(response.data);
+    } catch (error) {
+      // Handle errors here
+      console.error('Error:', error);
+    }
+    }
   }, [checkoutValue])
 
 
@@ -99,24 +118,24 @@ const currentDate=year+'-'+month+'-'+day
   };
 
 
-  const postCheckoutData = async () => {
-    const checkouttime = formatTime(checkoutValue);
-    const formattedCheckouttime = `${checkouttime.hours}:${checkouttime.minutes}:${checkouttime.seconds}.${checkouttime.centiseconds}`;
-    const final = `${currentDate}T${formattedCheckouttime}`;
-    const id = user?.user_id;
-    console.log("formatted checkin time from checkin",checkouttime)
-    try {
-      const response = await axios.put<ResponseType>(`http://localhost:2700/user/checkOut/${id}`, {
-        checkout_date: final,
-      });
+  // const postCheckoutData = async () => {
+  //   const checkouttime = formatTime(checkoutValue);
+  //   const formattedCheckouttime = `${checkouttime.hours}:${checkouttime.minutes}:${checkouttime.seconds}.${checkouttime.centiseconds}`;
+  //   const final = `${currentDate}T${formattedCheckouttime}`;
+  //   const id = user?.user_id;
+  //   console.log("formatted checkin time from checkin",checkouttime)
+  //   try {
+  //     const response = await axios.put<ResponseType>(`http://localhost:2700/user/checkOut/${id}`, {
+  //       checkout_date: final,
+  //     });
 
-      // Handle the response data
-      setcheckoutData(response.data);
-    } catch (error) {
-      // Handle errors here
-      console.error('Error:', error);
-    }
-  };
+  //     // Handle the response data
+  //     setcheckoutData(response.data);
+  //   } catch (error) {
+  //     // Handle errors here
+  //     console.error('Error:', error);
+  //   }
+  // };
 
   const handleClick = async () => {
    await  handleCheckinCheckout()
@@ -125,7 +144,7 @@ const currentDate=year+'-'+month+'-'+day
       if (inTime === null) {
        postCheckinData();
       } else {
-        postCheckoutData();
+       // postCheckoutData();
       }
     } 
     else {
