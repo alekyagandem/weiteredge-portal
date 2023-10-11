@@ -24,6 +24,7 @@ import styled from "@emotion/styled";
 import axios from "axios";
 import { connect, DispatchProp } from "react-redux";
 import { useUserContext } from "./Usercontext";
+import { relative } from "path";
 
 
 const MainDiv = styled.div({
@@ -92,6 +93,13 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
         // console.log(localStorage.getItem("role_id"))
         navigate("/options")
       }
+       else if (data.status == 200 && data.data.data.role.role_type == "user") {
+        // localStorage.setItem("role_id", data.data.data);
+        localStorage.setItem("loggedIn", "true");
+        dispatch({ type: "ROLE", payload: "user" });
+        // console.log(localStorage.getItem("role_id"))
+        navigate("/options")
+      }
     } catch (error) {
       console.log(error);
       // window.alert("Can't Assign Same Track Name")
@@ -154,7 +162,7 @@ const LoginRoute: React.FC<LoginRouteProps> = ({ dispatch }) => {
           </FormControl>
           <FormControlLabel
             control={
-              <Checkbox defaultChecked value="remember" color="secondary" />
+              <Checkbox defaultChecked value="remember" color="secondary"/>
             }
             label="Remember me"
           />

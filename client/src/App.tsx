@@ -20,12 +20,15 @@ import Breaktime from "./Components/loggedin/Breaktime";
 import Timesheet from "./Components/loggedin/Timesheet";
 import styled from '@emotion/styled';
 import { UserProvider } from "./Components/loginPage/Usercontext";
+import { Employeetable } from "./Components/AdminPage/Empdetails";
+import { Candidateinfo } from "./Components/loggedin/EmpData";
 function App() {
   const [activeLink, setActiveLink] = useState<String>("");
-  const isAuthenticated = localStorage.getItem("role_id") === "user";
+  const isuserAuthenticated = localStorage.getItem("role_id") === "user";
+  const isadminAuthenticated = localStorage.getItem("role_id") === "admin";
   const isLoggedin =localStorage.getItem("loggedIn") === "true"
-  const shouldDisplaySidebar = isAuthenticated; // Display the sidebar only for authenticated users
-  console.log("isAuthenticated",isAuthenticated)
+  const shouldDisplaySidebar = isuserAuthenticated; // Display the sidebar only for authenticated users
+  console.log("isAuthenticated",isadminAuthenticated)
   console.log("Role_id",localStorage.getItem("role_id"),localStorage.getItem("loggedIn"))
 
   return (
@@ -35,8 +38,8 @@ function App() {
 
 
       {
-         (localStorage.getItem('role_id') === "null" || localStorage.getItem('loggedIn') != "true")  &&
-         <>
+        //  (localStorage.getItem('role_id') === "null" || localStorage.getItem('loggedIn') != "true")  &&
+        //  <>
 
       <Routes>
         {/* (localStorage.getItem('role_id') === "null" ) && */}
@@ -44,7 +47,7 @@ function App() {
         <Route
           path="/options"
           element={
-            isAuthenticated && isLoggedin ? (
+            isuserAuthenticated && isLoggedin ? (
               <>
                 <MyProvider>
                   <Sidebar setActiveLink={setActiveLink} />
@@ -60,7 +63,35 @@ function App() {
             )
           }
         />
+        <Route
+        path="/table"
+        element={
+          isadminAuthenticated && isLoggedin?(
+            <>
+            <Employeetable/>
+            </>
+          ):(
+            <Navigate to="/"/>
+          )
+        }
+        
+        />
+         <Route
+        path="/empdetails/:userId"
+        element={
+          isadminAuthenticated && isLoggedin?(
+            <>
+            <Candidateinfo/>
+            </>
+          ):(
+            <Navigate to="/"/>
+          )
+        }
+        
+        />
       </Routes>
+      
+}
       </UserProvider>
     </div>
   );
